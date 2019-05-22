@@ -11,6 +11,23 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('broadcast', function (){
+   event(new \App\Events\BroadcastMessage('demo', 'demo', [
+       'evento' => 'demo'
+   ]));
+});
+
+Route::post('send-message', function (\Illuminate\Http\Request $request){
+    event(new \App\Events\BroadcastMessage('chat', 'messages', [
+        'message' => $request->get('message')
+    ]));
+});
+Route::get('/ws', function () {
+    return view('ws');
 });
