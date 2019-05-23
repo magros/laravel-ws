@@ -32,6 +32,29 @@
             border-radius: 3px;
         }
     </style>
+    <script src="{{ mix('js/app.js') }}"></script>
+    <script>
+        window.Echo.channel('chat')
+            .listen('.messages', (res) => {
+                console.log(res);
+                document.getElementById("messages").innerHTML += '<p>'+res.data.message +'</p>';
+            });
+
+        var sendMessage = function () {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // document.getElementById("messages").innerHTML += this.responseText;
+                }
+            };
+            var message = document.getElementById('message').value;
+
+            console.log(message);
+            xhttp.open("POST", "send-message", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("message="+message);
+        };
+    </script>
 </head>
 <body>
 <div id="app">
@@ -39,32 +62,8 @@
         <input type="text" placeholder="Escribe un mensaje" id="message" >
         <div class="btn btn-success" onclick="sendMessage()">Enviar mensaje</div>
     </div>
-    <div id="messages">
-    </div>
+    <div id="messages"></div>
 </div>
-<script src="{{ mix('js/app.js') }}"></script>
-<script>
 
-    window.Echo.channel('chat')
-        .listen('.messages', (res) => {
-            console.log(res);
-            document.getElementById("messages").innerHTML += '<p>'+res.data.message +'</p>';
-        });
-
-    var sendMessage = function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                // document.getElementById("messages").innerHTML += this.responseText;
-            }
-        };
-        var message = document.getElementById('message').value;
-
-        console.log(message);
-        xhttp.open("POST", "send-message", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("message="+message);
-    };
-</script>
 </body>
 </html>
